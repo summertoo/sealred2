@@ -94,33 +94,36 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
   const currentStepData = steps[currentStep];
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl max-w-md w-full max-h-[80vh] overflow-hidden shadow-2xl">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-lg w-full max-h-[85vh] overflow-hidden shadow-2xl transform transition-all">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex items-center space-x-3">
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 text-center">
+          <div className="flex justify-between items-start mb-6">
+            <div className="flex-1" />
+            <div className="flex items-center justify-center space-x-3">
               {currentStepData.icon}
-              <h2 className="text-xl font-bold">{currentStepData.title}</h2>
+              <h2 className="text-2xl font-bold text-center">{currentStepData.title}</h2>
             </div>
-            <button
-              onClick={onClose}
-              className="text-white hover:text-gray-200 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <div className="flex-1 flex justify-end">
+              <button
+                onClick={onClose}
+                className="text-white hover:text-gray-200 transition-colors p-1 rounded-lg hover:bg-white hover:bg-opacity-20"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
           </div>
           
           {/* Progress */}
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 max-w-xs mx-auto">
             {steps.map((_, index) => (
               <div
                 key={index}
-                className={`flex-1 h-2 rounded-full transition-colors ${
+                className={`flex-1 h-2 rounded-full transition-all duration-300 ${
                   index === currentStep
-                    ? 'bg-white'
+                    ? 'bg-white shadow-lg'
                     : index < currentStep
-                    ? 'bg-white bg-opacity-60'
+                    ? 'bg-white bg-opacity-70'
                     : 'bg-white bg-opacity-30'
                 }`}
               />
@@ -129,9 +132,9 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-6">
-          <div className="mb-6">
-            <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+        <div className="p-8 text-center">
+          <div className="mb-8">
+            <p className="text-gray-700 whitespace-pre-line leading-relaxed text-lg">
               {currentStepData.content}
             </p>
           </div>
@@ -140,7 +143,7 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
           {currentStepData.action && (
             <button
               onClick={currentStepData.action.onClick}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 mb-4"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-8 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 mb-6 text-lg shadow-lg"
             >
               {currentStepData.action.text}
             </button>
@@ -151,35 +154,35 @@ export const InteractiveTutorial: React.FC<InteractiveTutorialProps> = ({
             <button
               onClick={handlePrevious}
               disabled={currentStep === 0}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+              className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all ${
                 currentStep === 0
-                  ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                  ? 'text-gray-400 cursor-not-allowed bg-gray-100'
+                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100 hover:shadow-md'
               }`}
             >
-              <ChevronLeft className="w-4 h-4" />
-              <span>上一步</span>
+              <ChevronLeft className="w-5 h-5" />
+              <span className="font-medium">上一步</span>
             </button>
 
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-500 font-medium bg-gray-100 px-4 py-2 rounded-full">
               {currentStep + 1} / {steps.length}
             </span>
 
             <button
               onClick={handleNext}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all hover:shadow-md font-medium"
             >
               <span>{currentStep === steps.length - 1 ? '完成' : '下一步'}</span>
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
 
           {/* Skip Button */}
           {currentStep < steps.length - 1 && (
-            <div className="mt-4 text-center">
+            <div className="mt-6 text-center">
               <button
                 onClick={handleSkip}
-                className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                className="text-sm text-gray-500 hover:text-gray-700 transition-colors hover:underline"
               >
                 跳过教程
               </button>
