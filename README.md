@@ -205,8 +205,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 test url:
 https://sealredpacket.edgeone.app/
-https://sealred2.vercel.app/
 
 
 git remote add origin git@github.com:summertoo/sealred2.git
-https://github.com/summertoo/sealred2.git
+

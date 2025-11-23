@@ -2,10 +2,11 @@ module seal_redpacket::redpacket {
     use sui::coin::{Self, Coin};
     use sui::sui::SUI;
     use sui::balance::{Self, Balance};
-    use sui::object::{Self, ID};
+    use sui::object::{Self, ID, UID};
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
     use sui::table::{Self, Table};
+    use std::string::{Self, String};
     use std::vector;
     use std::option::{Self, Option};
 
@@ -15,14 +16,14 @@ module seal_redpacket::redpacket {
     }
 
     /// 游戏模式常量
-    public const LOWEST_SCORE: u8 = 0;    // 分数最低者输
-    public const HIGHEST_SCORE: u8 = 1;    // 分数最高者输
-    public const LUCKY_NUMBER: u8 = 2;     // 尾号为8者输
-    public const CUSTOM_RULE: u8 = 3;     // 自定义规则
+    const LOWEST_SCORE: u8 = 0;    // 分数最低者输
+    const HIGHEST_SCORE: u8 = 1;    // 分数最高者输
+    const LUCKY_NUMBER: u8 = 2;     // 尾号为8者输
+    const CUSTOM_RULE: u8 = 3;     // 自定义规则
 
     /// 红包游戏房间
     public struct RedPacketGame has key, store {
-        id: ID,
+        id: UID,
         creator: address,
         game_mode: GameMode,
         bet_amount: u64,           // 每人押注金额
@@ -47,7 +48,7 @@ module seal_redpacket::redpacket {
     }
 
     /// 游戏结果
-    public struct GameResult has store {
+    public struct GameResult has store, drop {
         loser: address,            // 输家
         winners: vector<address>,  // 赢家列表
         total_prize: u64,          // 总奖金
@@ -55,9 +56,26 @@ module seal_redpacket::redpacket {
         finished_at: u64,          // 结束时间
     }
 
+    /// 玩家信息返回类型
+    public struct PlayerInfoResponse has copy, drop, store {
+        bet_amount: u64,
+        score: u64,
+        has_played: bool,
+        timestamp: u64,
+    }
+
+    /// 游戏结果返回类型
+    public struct GameResultResponse has copy, drop, store {
+        loser: address,
+        winners: vector<address>,
+        total_prize: u64,
+        winner_share: u64,
+        finished_at: u64,
+    }
+
     /// 游戏记录
     public struct GameRecord has key, store {
-        id: ID,
+        id: UID,
         game_id: ID,
         player: address,
         action: u8,                // 0: join, 1: win, 2: lose
@@ -88,7 +106,7 @@ module seal_redpacket::redpacket {
         let mode = GameMode { mode: game_mode };
 
         // 创建游戏房间
-        let game = RedPacketGame {
+        let mut game = RedPacketGame {
             id: object::new(ctx),
             creator: sender,
             game_mode: mode,
@@ -125,10 +143,10 @@ module seal_redpacket::redpacket {
         
         // 转移多余币给创建者
         if (balance::value(&balance) > 0) {
-            transfer::public_transfer(coin::from_balance(balance), sender);
+            transfer::public_transfer(coin::from_balance(balance, ctx), sender);
         } else {
             balance::destroy_zero(balance);
-        }
+        };
         
         // 销毁押注币（实际上转入奖池，这里简化处理）
         balance::destroy_zero(bet_balance);
@@ -173,21 +191,21 @@ module seal_redpacket::redpacket {
         transfer::public_transfer(record, sender);
 
         // 处理押注币
-        let remaining_balance = coin::into_balance(coins);
+        let mut remaining_balance = coin::into_balance(coins);
         let bet_balance = balance::split(&mut remaining_balance, game.bet_amount);
-        balance::destroy_zero(remaining_balance);
+        balance::destroy_zero(bet_balance);
         
         // 转移多余币给玩家
         if (balance::value(&remaining_balance) > 0) {
-            transfer::public_transfer(coin::from_balance(remaining_balance), sender);
+            transfer::public_transfer(coin::from_balance(remaining_balance, ctx), sender);
         } else {
             balance::destroy_zero(remaining_balance);
-        }
+        };
 
         // 检查是否可以开始游戏
         if (game.current_players == game.max_players) {
             game.game_status = 1; // playing
-        }
+        };
     }
 
     /// 提交游戏分数
@@ -211,7 +229,7 @@ module seal_redpacket::redpacket {
         // 检查是否所有玩家都提交了分数
         if (all_players_played(game)) {
             finish_game(game, ctx);
-        }
+        };
     }
 
     /// 检查所有玩家是否都已提交分数
@@ -236,7 +254,7 @@ module seal_redpacket::redpacket {
             // 创建游戏结果
             let result = GameResult {
                 loser,
-                winners: vector::clone(&winners),
+                winners,
                 total_prize: game.prize_pool,
                 winner_share,
                 finished_at: tx_context::epoch_timestamp_ms(ctx),
@@ -245,7 +263,7 @@ module seal_redpacket::redpacket {
             
             // 分配奖励给赢家（简化实现）
             distribute_winnings(game, ctx);
-        }
+        };
         
         game.game_status = 2; // finished
     }
@@ -336,15 +354,15 @@ module seal_redpacket::redpacket {
     public fun get_player_info(
         game: &RedPacketGame,
         player: address
-    ): Option<(u64, u64, bool, u64)> {
+    ): Option<PlayerInfoResponse> {
         if (table::contains(&game.players, player)) {
             let info = table::borrow(&game.players, player);
-            option::some((
-                info.bet_amount,
-                info.score,
-                info.has_played,
-                info.timestamp
-            ))
+            option::some(PlayerInfoResponse {
+                bet_amount: info.bet_amount,
+                score: info.score,
+                has_played: info.has_played,
+                timestamp: info.timestamp,
+            })
         } else {
             option::none()
         }
@@ -361,16 +379,16 @@ module seal_redpacket::redpacket {
     /// 获取游戏结果
     public fun get_game_result(
         game: &RedPacketGame
-    ): Option<(address, vector<address>, u64, u64, u64)> {
+    ): Option<GameResultResponse> {
         if (option::is_some(&game.game_result)) {
             let result = option::borrow(&game.game_result);
-            option::some((
-                result.loser,
-                result.winners,
-                result.total_prize,
-                result.winner_share,
-                result.finished_at
-            ))
+            option::some(GameResultResponse {
+                loser: result.loser,
+                winners: result.winners,
+                total_prize: result.total_prize,
+                winner_share: result.winner_share,
+                finished_at: result.finished_at,
+            })
         } else {
             option::none()
         }
