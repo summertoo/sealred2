@@ -78,10 +78,10 @@ Seal Red Packet is an innovative multiplayer game where 9 players compete by mak
 
 ```bash
 # Clone the repository
-git clone https://github.com/summertoo/sealRedPacket.git
+git clone https://github.com/summertoo/sealred2.git
 
 # Navigate to project directory
-cd sealRedPacket
+cd sealred2
 
 # Install dependencies
 npm install
@@ -204,8 +204,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 **Built with ❤️ using Sui blockchain and Seal encryption technology**
 
 test url:
-https://sealredpacket.edgeone.app/
+https://sealred2.vercel.app/
 
-
-git remote add origin git@github.com:summertoo/sealred2.git
-
+![alt text](image.png)
