@@ -149,7 +149,7 @@ module seal_redpacket::redpacket {
         };
         
         // 销毁押注币（实际上转入奖池，这里简化处理）
-        balance::destroy_zero(bet_balance);
+        balance::destroy_zero(bet_balance)
     }
 
     /// 加入游戏

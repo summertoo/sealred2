@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ConnectButton, useCurrentAccount, useSuiClientContext } from '@mysten/dapp-kit';
 import DemoGameInterface from './components/DemoGameInterface';
+import LanguageToggle from './components/LanguageToggle';
+import { useLanguage } from './hooks/useLanguage';
 import { Play, BookOpen, Trophy, Shield, Users, Sparkles, Zap, Lock, Eye, TrendingUp, Star, Coins, Crown, Flame, ArrowRight, Gamepad2, Gift, Target, Dice6 } from 'lucide-react';
 
 type ViewType = 'home' | 'demo' | 'wallet';
@@ -69,6 +71,8 @@ interface HomeViewProps {
 }
 
 const HomeView: React.FC<HomeViewProps> = ({ currentAccount, network, onViewChange, mounted }) => {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Game Header */}
@@ -83,8 +87,8 @@ const HomeView: React.FC<HomeViewProps> = ({ currentAccount, network, onViewChan
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">🎮 Seal 红包接龙</h1>
-                <p className="text-gray-700 text-xs font-medium">公平游戏 • 赢取大奖</p>
+                <h1 className="text-xl font-bold text-gray-900">{t('home.title')}</h1>
+                <p className="text-gray-700 text-xs font-medium">{t('home.subtitle')}</p>
               </div>
             </div>
             
@@ -92,9 +96,10 @@ const HomeView: React.FC<HomeViewProps> = ({ currentAccount, network, onViewChan
               <div className="hidden md:flex items-center space-x-2 px-3 py-1 bg-green-500/20 backdrop-blur-sm rounded-full border border-green-400/30">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-green-300 text-xs font-bold">
-                  {network === 'testnet' ? '🧪 测试网' : '🌐 主网'}
+                  {network === 'testnet' ? '🧪 ' + t('common.testnet') : '🌐 ' + t('common.mainnet')}
                 </span>
               </div>
+              <LanguageToggle />
               <ConnectButton />
             </div>
           </div>
@@ -109,19 +114,19 @@ const HomeView: React.FC<HomeViewProps> = ({ currentAccount, network, onViewChan
           <div className={`text-center mb-8 transition-all duration-1000 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-red-500/30 to-yellow-500/30 backdrop-blur-sm border-2 border-yellow-400/50 px-6 py-3 rounded-full text-yellow-200 text-sm font-bold mb-6 animate-bounce">
               <Flame className="w-4 h-4" />
-              <span>🔥 限时活动进行中 • 奖金翻倍</span>
+              <span>{t('home.limitedEvent')}</span>
               <Flame className="w-4 h-4" />
             </div>
             
             <h1 className="text-5xl md:text-6xl font-black text-gray-900 mb-4 leading-tight">
-              <span className="block mb-2 text-gray-700">🎯 瞄准</span>
+              <span className="block mb-2 text-gray-700">{t('home.heroTitle').split('\n')[0]}</span>
               <span className="bg-gradient-to-r from-red-600 via-orange-600 to-yellow-600 bg-clip-text text-transparent animate-pulse">
-                少数胜利
+                {t('home.heroTitle').split('\n')[1]}
               </span>
             </h1>
             
             <p className="text-lg text-gray-800 mb-8 max-w-2xl mx-auto font-medium">
-              🎰 9人房间 • 🎲 心理博弈 • 💰 公平开奖 • 🏆 赢取SUI
+              {t('home.heroSubtitle')}
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
@@ -131,7 +136,7 @@ const HomeView: React.FC<HomeViewProps> = ({ currentAccount, network, onViewChan
               >
                 <span className="relative z-10 flex items-center space-x-2">
                   <Dice6 className="w-6 h-6" />
-                  <span>🎮 立即开玩</span>
+                  <span>{t('home.playNow')}</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-red-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -143,7 +148,7 @@ const HomeView: React.FC<HomeViewProps> = ({ currentAccount, network, onViewChan
               >
                 <span className="flex items-center space-x-2">
                   <Coins className="w-5 h-5" />
-                  <span>💰 钱包</span>
+                  <span>{t('home.wallet')}</span>
                 </span>
               </button>
             </div>
@@ -152,10 +157,10 @@ const HomeView: React.FC<HomeViewProps> = ({ currentAccount, network, onViewChan
           {/* Live Stats Dashboard */}
           <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 transition-all duration-1000 delay-400 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             {[
-              { icon: Users, label: '在线玩家', value: '2,847', color: 'from-blue-400 to-blue-600', bg: 'bg-blue-500/20' },
-              { icon: Trophy, label: '奖池', value: '15.2K SUI', color: 'from-yellow-400 to-orange-500', bg: 'bg-yellow-500/20' },
-              { icon: Target, label: '胜率', value: '44.4%', color: 'from-green-400 to-green-600', bg: 'bg-green-500/20' },
-              { icon: Zap, label: '今日游戏', value: '1,234', color: 'from-purple-400 to-purple-600', bg: 'bg-purple-500/20' }
+              { icon: Users, label: t('home.stats.onlinePlayers'), value: '2,847', color: 'from-blue-400 to-blue-600', bg: 'bg-blue-500/20' },
+              { icon: Trophy, label: t('home.stats.prizePool'), value: '15.2K SUI', color: 'from-yellow-400 to-orange-500', bg: 'bg-yellow-500/20' },
+              { icon: Target, label: t('home.stats.winRate'), value: '44.4%', color: 'from-green-400 to-green-600', bg: 'bg-green-500/20' },
+              { icon: Zap, label: t('home.stats.todayGames'), value: '1,234', color: 'from-purple-400 to-purple-600', bg: 'bg-purple-500/20' }
             ].map((stat, index) => (
               <div
                 key={index}
@@ -175,27 +180,27 @@ const HomeView: React.FC<HomeViewProps> = ({ currentAccount, network, onViewChan
           {/* Game Features Cards */}
           <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 transition-all duration-1000 delay-600 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             {[
-              {
-                icon: Lock,
-                title: '🔒 绝对公平',
-                description: 'Seal加密技术保证无人作弊',
-                gradient: 'from-purple-500 to-pink-500',
-                highlight: '100%透明'
-              },
-              {
-                icon: Users,
-                title: '👥 少数获胜',
-                description: '选择少数方分享奖金池',
-                gradient: 'from-blue-500 to-cyan-500',
-                highlight: '策略游戏'
-              },
-              {
-                icon: Gift,
-                title: '🎁 即时开奖',
-                description: '区块链验证公平开奖',
-                gradient: 'from-green-500 to-emerald-500',
-                highlight: '秒到账'
-              }
+            {
+              icon: Lock,
+              title: t('home.features.fair.title'),
+              description: t('home.features.fair.description'),
+              gradient: 'from-purple-500 to-pink-500',
+              highlight: t('home.features.fair.highlight')
+            },
+            {
+              icon: Users,
+              title: t('home.features.minority.title'),
+              description: t('home.features.minority.description'),
+              gradient: 'from-blue-500 to-cyan-500',
+              highlight: t('home.features.minority.highlight')
+            },
+            {
+              icon: Gift,
+              title: t('home.features.instant.title'),
+              description: t('home.features.instant.description'),
+              gradient: 'from-green-500 to-emerald-500',
+              highlight: t('home.features.instant.highlight')
+            }
             ].map((feature, index) => (
               <div
                 key={index}
@@ -219,16 +224,16 @@ const HomeView: React.FC<HomeViewProps> = ({ currentAccount, network, onViewChan
           {/* Quick Game Guide */}
           <div className={`bg-gradient-to-r from-red-500/20 to-yellow-500/20 backdrop-blur-sm border-2 border-yellow-400/30 rounded-2xl p-8 transition-all duration-1000 delay-800 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-black text-white mb-2">🎮 游戏攻略</h2>
-              <p className="text-yellow-200 font-medium">四步成为赢家</p>
+              <h2 className="text-2xl font-black text-white mb-2">{t('home.guide.title')}</h2>
+              <p className="text-yellow-200 font-medium">{t('home.guide.subtitle')}</p>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { step: '1️⃣', title: '加入房间', desc: '选择房间押注', icon: '🎰' },
-                { step: '2️⃣', title: '秘密选择', desc: '加密你的选择', icon: '🔒' },
-                { step: '3️⃣', title: '等待开奖', desc: '等待其他玩家', icon: '⏰' },
-                { step: '4️⃣', title: '赢得奖金', desc: '少数方获胜', icon: '🏆' }
+                { step: '1️⃣', title: t('home.guide.steps.join.title'), desc: t('home.guide.steps.join.description'), icon: '🎰' },
+                { step: '2️⃣', title: t('home.guide.steps.choose.title'), desc: t('home.guide.steps.choose.description'), icon: '🔒' },
+                { step: '3️⃣', title: t('home.guide.steps.wait.title'), desc: t('home.guide.steps.wait.description'), icon: '⏰' },
+                { step: '4️⃣', title: t('home.guide.steps.win.title'), desc: t('home.guide.steps.win.description'), icon: '🏆' }
               ].map((item, index) => (
                 <div key={index} className="text-center group">
                   <div className="relative mb-3">
@@ -255,10 +260,10 @@ const HomeView: React.FC<HomeViewProps> = ({ currentAccount, network, onViewChan
           <div className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-2">
               <Target className="w-4 h-4 text-yellow-400" />
-              <span className="text-yellow-200 font-bold">© 2025 Seal 红包接龙</span>
+              <span className="text-yellow-200 font-bold">{t('home.footer.copyright')}</span>
               <Target className="w-4 h-4 text-yellow-400" />
             </div>
-            <p className="text-yellow-300 text-sm font-medium">🎮 公平游戏 • 💰 透明开奖 • 🏆 赢取SUI</p>
+            <p className="text-yellow-300 text-sm font-medium">{t('home.footer.tagline')}</p>
           </div>
         </div>
       </footer>
@@ -273,6 +278,7 @@ interface WalletViewProps {
 const WalletView: React.FC<WalletViewProps> = ({ onBack }) => {
   const currentAccount = useCurrentAccount();
   const { network } = useSuiClientContext();
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 flex flex-col">
@@ -296,9 +302,9 @@ const WalletView: React.FC<WalletViewProps> = ({ onBack }) => {
               className="flex items-center space-x-2 text-gray-800 hover:text-gray-600 transition-colors font-medium"
             >
               <Target className="w-5 h-5" />
-              <span>🎮 返回游戏</span>
+              <span>🎮 {t('common.back')}</span>
             </button>
-            <h1 className="text-2xl font-black text-gray-900">💰 钱包中心</h1>
+            <h1 className="text-2xl font-black text-gray-900">{t('wallet.title')}</h1>
             <div className="w-20" /> {/* Spacer */}
           </div>
         </div>
@@ -317,24 +323,24 @@ const WalletView: React.FC<WalletViewProps> = ({ onBack }) => {
                     <Coins className="w-10 h-10 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-white mb-2">💎 钱包信息</h2>
-                    <p className="text-yellow-200 font-medium">管理你的游戏资产</p>
+                    <h2 className="text-3xl font-black text-white mb-2">💎 {t('wallet.address')}</h2>
+                    <p className="text-yellow-200 font-medium">{t('wallet.subtitle')}</p>
                   </div>
                 </div>
                 
                 <div className="space-y-6">
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <p className="text-yellow-200 text-sm font-bold mb-3">🏠 钱包地址</p>
+                    <p className="text-yellow-200 text-sm font-bold mb-3">🏠 {t('wallet.address')}</p>
                     <p className="text-white font-mono text-sm break-all">{currentAccount.address}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-6">
                     <div className="bg-green-500/20 backdrop-blur-sm rounded-2xl p-6 border border-green-400/30">
-                      <p className="text-green-200 text-sm font-bold mb-3">✅ 连接状态</p>
-                      <p className="text-green-300 font-black text-lg">已连接</p>
+                      <p className="text-green-200 text-sm font-bold mb-3">✅ {t('wallet.status')}</p>
+                      <p className="text-green-300 font-black text-lg">{t('wallet.connected')}</p>
                     </div>
                     <div className="bg-blue-500/20 backdrop-blur-sm rounded-2xl p-6 border border-blue-400/30">
-                      <p className="text-blue-200 text-sm font-bold mb-3">🌐 网络</p>
-                      <p className="text-blue-300 font-black text-lg">{network === 'testnet' ? '🧪 测试网' : '🌐 主网'}</p>
+                      <p className="text-blue-200 text-sm font-bold mb-3">🌐 {t('wallet.network')}</p>
+                      <p className="text-blue-300 font-black text-lg">{network === 'testnet' ? '🧪 ' + t('common.testnet') : '🌐 ' + t('common.mainnet')}</p>
                     </div>
                   </div>
                 </div>
@@ -342,13 +348,13 @@ const WalletView: React.FC<WalletViewProps> = ({ onBack }) => {
 
               {/* Game Features */}
               <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border-2 border-white/20 rounded-2xl p-8">
-                <h2 className="text-3xl font-black text-white mb-8">🎮 游戏功能</h2>
+                <h2 className="text-3xl font-black text-white mb-8">{t('wallet.features.title')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {[
-                    { title: '🎁 创建红包', desc: '创建新的游戏房间', emoji: '🎰', color: 'from-purple-500 to-pink-500' },
-                    { title: '🎯 加入游戏', desc: '参与其他玩家的游戏', emoji: '🎲', color: 'from-blue-500 to-cyan-500' },
-                    { title: '📊 我的记录', desc: '查看游戏历史记录', emoji: '📈', color: 'from-green-500 to-emerald-500' },
-                    { title: '💎 奖金统计', desc: '查看收益统计', emoji: '💰', color: 'from-yellow-400 to-orange-500' }
+                    { title: t('wallet.features.create.title'), desc: t('wallet.features.create.description'), emoji: '🎰', color: 'from-purple-500 to-pink-500' },
+                    { title: t('wallet.features.join.title'), desc: t('wallet.features.join.description'), emoji: '🎲', color: 'from-blue-500 to-cyan-500' },
+                    { title: t('wallet.features.history.title'), desc: t('wallet.features.history.description'), emoji: '📈', color: 'from-green-500 to-emerald-500' },
+                    { title: t('wallet.features.stats.title'), desc: t('wallet.features.stats.description'), emoji: '💰', color: 'from-yellow-400 to-orange-500' }
                   ].map((item, index) => (
                     <button
                       key={index}
@@ -370,8 +376,8 @@ const WalletView: React.FC<WalletViewProps> = ({ onBack }) => {
                 <div className="w-24 h-24 bg-gradient-to-r from-yellow-400 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-8 animate-pulse">
                   <Coins className="w-12 h-12 text-white" />
                 </div>
-                <h2 className="text-4xl font-black text-white mb-6">🔗 连接钱包</h2>
-                <p className="text-yellow-200 mb-10 text-lg font-medium">连接钱包开始游戏赢取SUI</p>
+                <h2 className="text-4xl font-black text-white mb-6">{t('wallet.connectWallet')}</h2>
+                <p className="text-yellow-200 mb-10 text-lg font-medium">{t('wallet.connectMessage')}</p>
                 <div className="flex justify-center">
                   <ConnectButton />
                 </div>
