@@ -8,6 +8,20 @@ export interface Translation {
     testnet: string;
     mainnet: string;
     online: string;
+    create: string;
+    join: string;
+    leave: string;
+    start: string;
+    waiting: string;
+    full: string;
+    playing: string;
+    finished: string;
+    refresh: string;
+    loading: string;
+    error: string;
+    success: string;
+    cancel: string;
+    confirm: string;
   };
   home: {
     title: string;
@@ -97,6 +111,54 @@ export interface Translation {
       };
     };
   };
+  room: {
+    title: string;
+    subtitle: string;
+    createRoom: string;
+    joinRoom: string;
+    roomList: string;
+    roomDetails: string;
+    players: string;
+    betAmount: string;
+    prizePool: string;
+    status: string;
+    waiting: string;
+    full: string;
+    playing: string;
+    finished: string;
+    playerList: string;
+    gameResult: string;
+    totalA: string;
+    totalB: string;
+    winnerChoice: string;
+    winners: string;
+    prizePerWinner: string;
+    selectChoice: string;
+    choiceA: string;
+    choiceB: string;
+    encryptChoice: string;
+    revealChoice: string;
+    waitingPlayers: string;
+    gameInProgress: string;
+    congratulations: string;
+    minorityWins: string;
+    createNewRoom: string;
+    roomName: string;
+    maxPlayers: string;
+    enterRoomName: string;
+    selectBetAmount: string;
+    creatingRoom: string;
+    joiningRoom: string;
+    errorJoinRoom: string;
+    errorCreateRoom: string;
+    roomCreated: string;
+    roomJoined: string;
+    leftRoom: string;
+    refreshRooms: string;
+    noRoomsAvailable: string;
+    createFirstRoom: string;
+    backToHome: string;
+  };
 }
 
 export const zhCN: Translation = {
@@ -108,7 +170,21 @@ export const zhCN: Translation = {
     connected: "已连接",
     testnet: "测试网",
     mainnet: "主网",
-    online: "在线"
+    online: "在线",
+    create: "创建",
+    join: "加入",
+    leave: "离开",
+    start: "开始",
+    waiting: "等待中",
+    full: "已满",
+    playing: "游戏中",
+    finished: "已结束",
+    refresh: "刷新",
+    loading: "加载中",
+    error: "错误",
+    success: "成功",
+    cancel: "取消",
+    confirm: "确认"
   },
   home: {
     title: "🎮 Seal 红包接龙",
@@ -197,6 +273,54 @@ export const zhCN: Translation = {
         description: "查看收益统计"
       }
     }
+  },
+  room: {
+    title: "🎮 游戏房间",
+    subtitle: "加入或创建房间开始游戏",
+    createRoom: "创建房间",
+    joinRoom: "加入房间",
+    roomList: "房间列表",
+    roomDetails: "房间详情",
+    players: "玩家",
+    betAmount: "押注金额",
+    prizePool: "奖金池",
+    status: "状态",
+    waiting: "等待中",
+    full: "已满",
+    playing: "游戏中",
+    finished: "已结束",
+    playerList: "玩家列表",
+    gameResult: "游戏结果",
+    totalA: "选择A的人数",
+    totalB: "选择B的人数",
+    winnerChoice: "获胜选项",
+    winners: "获胜者",
+    prizePerWinner: "每人获得",
+    selectChoice: "选择你的选项",
+    choiceA: "选项 A",
+    choiceB: "选项 B",
+    encryptChoice: "加密选择",
+    revealChoice: "揭晓选择",
+    waitingPlayers: "等待其他玩家加入...",
+    gameInProgress: "游戏进行中...",
+    congratulations: "🎉 恭喜获胜者！",
+    minorityWins: "少数方 {choice} 赢得了游戏！",
+    createNewRoom: "创建新房间",
+    roomName: "房间名称",
+    maxPlayers: "最大玩家数",
+    enterRoomName: "请输入房间名称",
+    selectBetAmount: "选择押注金额",
+    creatingRoom: "正在创建房间...",
+    joiningRoom: "正在加入房间...",
+    errorJoinRoom: "加入房间失败",
+    errorCreateRoom: "创建房间失败",
+    roomCreated: "房间创建成功",
+    roomJoined: "成功加入房间",
+    leftRoom: "已离开房间",
+    refreshRooms: "刷新房间列表",
+    noRoomsAvailable: "暂无可用房间",
+    createFirstRoom: "创建第一个房间开始游戏",
+    backToHome: "返回主界面"
   }
 };
 
@@ -209,10 +333,24 @@ export const enUS: Translation = {
     connected: "Connected",
     testnet: "Testnet",
     mainnet: "Mainnet",
-    online: "Online"
+    online: "Online",
+    create: "Create",
+    join: "Join",
+    leave: "Leave",
+    start: "Start",
+    waiting: "Waiting",
+    full: "Full",
+    playing: "Playing",
+    finished: "Finished",
+    refresh: "Refresh",
+    loading: "Loading",
+    error: "Error",
+    success: "Success",
+    cancel: "Cancel",
+    confirm: "Confirm"
   },
   home: {
-    title: "🎮 Seal Red Packet Game",
+    title: "🎮 Seal Red Packet Game v 1.0.0",
     subtitle: "Fair Game • Win Big Prizes",
     heroTitle: "🎯 Aim for\nMinority Victory",
     heroSubtitle: "🎰 9 Players • 🎲 Strategy • 💰 Fair Draw • 🏆 Win SUI",
@@ -298,6 +436,54 @@ export const enUS: Translation = {
         description: "View earnings statistics"
       }
     }
+  },
+  room: {
+    title: "🎮 Game Rooms",
+    subtitle: "Join or create rooms to start playing",
+    createRoom: "Create Room",
+    joinRoom: "Join Room",
+    roomList: "Room List",
+    roomDetails: "Room Details",
+    players: "Players",
+    betAmount: "Bet Amount",
+    prizePool: "Prize Pool",
+    status: "Status",
+    waiting: "Waiting",
+    full: "Full",
+    playing: "Playing",
+    finished: "Finished",
+    playerList: "Player List",
+    gameResult: "Game Result",
+    totalA: "Total A Choices",
+    totalB: "Total B Choices",
+    winnerChoice: "Winner Choice",
+    winners: "Winners",
+    prizePerWinner: "Prize Per Winner",
+    selectChoice: "Select Your Choice",
+    choiceA: "Choice A",
+    choiceB: "Choice B",
+    encryptChoice: "Encrypt Choice",
+    revealChoice: "Reveal Choice",
+    waitingPlayers: "Waiting for other players to join...",
+    gameInProgress: "Game in progress...",
+    congratulations: "🎉 Congratulations to the winners!",
+    minorityWins: "Minority side {choice} won the game!",
+    createNewRoom: "Create New Room",
+    roomName: "Room Name",
+    maxPlayers: "Max Players",
+    enterRoomName: "Please enter room name",
+    selectBetAmount: "Select bet amount",
+    creatingRoom: "Creating room...",
+    joiningRoom: "Joining room...",
+    errorJoinRoom: "Failed to join room",
+    errorCreateRoom: "Failed to create room",
+    roomCreated: "Room created successfully",
+    roomJoined: "Successfully joined room",
+    leftRoom: "Left room",
+    refreshRooms: "Refresh room list",
+    noRoomsAvailable: "No rooms available",
+    createFirstRoom: "Create the first room to start playing",
+    backToHome: "Back to Home"
   }
 };
 

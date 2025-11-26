@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { ConnectButton, useCurrentAccount, useSuiClientContext } from '@mysten/dapp-kit';
-import DemoGameInterface from './components/DemoGameInterface';
+import RoomList from './components/RoomList';
+import RoomDetails from './components/RoomDetails';
+import CreateRoom from './components/CreateRoom';
 import LanguageToggle from './components/LanguageToggle';
 import { useLanguage } from './hooks/useLanguage';
 import { Play, BookOpen, Trophy, Shield, Users, Sparkles, Zap, Lock, Eye, TrendingUp, Star, Coins, Crown, Flame, ArrowRight, Gamepad2, Gift, Target, Dice6 } from 'lucide-react';
 
-type ViewType = 'home' | 'demo' | 'wallet';
+type ViewType = 'home' | 'rooms' | 'roomDetails' | 'createRoom' | 'wallet';
 
 function App() {
   const currentAccount = useCurrentAccount();
   const { network } = useSuiClientContext();
   const [currentView, setCurrentView] = useState<ViewType>('home');
+  const [currentRoomId, setCurrentRoomId] = useState<string>('room-1');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -19,8 +22,12 @@ function App() {
 
   const renderContent = () => {
     switch (currentView) {
-      case 'demo':
-        return <DemoGameInterface onBack={() => setCurrentView('home')} />;
+      case 'rooms':
+        return <RoomList onJoinRoom={(roomId) => { setCurrentRoomId(roomId); setCurrentView('roomDetails'); }} onCreateRoom={() => setCurrentView('createRoom')} onBackToHome={() => setCurrentView('home')} currentAccount={currentAccount?.address} />;
+      case 'roomDetails':
+        return <RoomDetails roomId={currentRoomId} onBack={() => setCurrentView('rooms')} currentAccount={currentAccount?.address} />;
+      case 'createRoom':
+        return <CreateRoom onBack={() => setCurrentView('rooms')} onRoomCreated={(roomId) => { setCurrentRoomId(roomId); setCurrentView('roomDetails'); }} currentAccount={currentAccount?.address} />;
       case 'wallet':
         return <WalletView onBack={() => setCurrentView('home')} />;
       default:
@@ -131,7 +138,7 @@ const HomeView: React.FC<HomeViewProps> = ({ currentAccount, network, onViewChan
             
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
               <button
-                onClick={() => onViewChange('demo')}
+                onClick={() => onViewChange('rooms')}
                 className="group relative overflow-hidden bg-gradient-to-r from-yellow-400 to-red-500 text-black px-8 py-4 rounded-xl font-black text-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-yellow-400/50 animate-pulse"
               >
                 <span className="relative z-10 flex items-center space-x-2">
